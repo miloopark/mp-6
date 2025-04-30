@@ -1,0 +1,21 @@
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f6f8fa;
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    background-color: #24292e;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #3b4350;
+}
