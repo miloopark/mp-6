@@ -2,10 +2,6 @@ import styles from './page.module.css'
 
 export const dynamic = 'force-dynamic'
 
-interface Props {
-  searchParams: { code?: string }
-}
-
 type GitHubToken = {
   access_token?: string
   error?: string
@@ -19,8 +15,12 @@ type GitHubUser = {
   avatar_url: string
 }
 
-export default async function Callback({ searchParams }: Props) {
-  const code = searchParams.code
+export default async function Callback({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string }>
+}) {
+  const { code } = await searchParams
 
   if (!code) {
     return (
@@ -36,15 +36,15 @@ export default async function Callback({ searchParams }: Props) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json'
+        Accept: 'application/json',
       },
       body: JSON.stringify({
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
         code,
-        redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI
+        redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
       }),
-      cache: 'no-store'
+      cache: 'no-store',
     }
   )
 
@@ -68,8 +68,10 @@ export default async function Callback({ searchParams }: Props) {
   }
 
   const userRes = await fetch('https://api.github.com/user', {
-    headers: { Authorization: `Bearer ${tokenJson.access_token}` },
-    cache: 'no-store'
+    headers: {
+      Authorization: `Bearer ${tokenJson.access_token}`,
+    },
+    cache: 'no-store',
   })
 
   if (!userRes.ok) {
@@ -84,7 +86,7 @@ export default async function Callback({ searchParams }: Props) {
 
   return (
     <main className={styles.container}>
-        <h1 className={styles.title}>
+      <h1 className={styles.title}>
         Welcome, {user.name ?? user.login}!
       </h1>
       <img
